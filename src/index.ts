@@ -1,8 +1,11 @@
 import Koa from "koa";
 
 import { port } from "./config";
+import * as Crons from "./crons";
 import * as Meta from "./meta";
 import router from "./router";
+
+Crons.init();
 
 const app = new Koa();
 

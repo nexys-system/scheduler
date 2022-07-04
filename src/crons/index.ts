@@ -7,14 +7,21 @@ interface CronResponse {
   dt: number;
 }
 
+// this Map will keep all crons in memory.
+// Global var... can do better/differently?
+export const cronJobs: Map<string, CronJob> = new Map();
+
 /**
  * every time a log is fired, the response is logged
  * @param param0
  * @returns
  */
-const logResponse = ({ body, status, dt }: CronResponse): Promise<void> => {
+const logResponse = (
+  cronName: string,
+  { body, status, dt }: CronResponse
+): Promise<void> => {
   const date = new Date();
-  console.log("logging", body, status, dt, date);
+  console.log("logging", cronName, body, status, dt, date);
   return Promise.resolve();
 };
 
@@ -42,7 +49,7 @@ const cronNameToFunction = async (name: string): Promise<CronResponse> => {
 
   const dt: number = t1.getTime() - t0.getTime();
 
-  logResponse({ body, status, dt });
+  logResponse(name, { body, status, dt });
 
   return { body, status, dt };
 };
@@ -58,8 +65,6 @@ const getCronsFromHost = async () => {
   return Promise.resolve([c]);
 };
 
-export const cronJobs: Map<string, CronJob> = new Map();
-
 export const init = async () => {
   // get all crons
   const crons: { name: string; cronstring: string }[] =
@@ -72,9 +77,11 @@ export const init = async () => {
 
     cronJobs.set(cron.name, job);
   });
+
+  console.log(`Crons started, n=${getCrons().length}`);
 };
 
-export const getCrons = (running: boolean) =>
+export const getCrons = (running: boolean = true): [string, CronJob][] =>
   Array.from(cronJobs.entries()).filter(([, v]) => v.running === running);
 
 export const getCron = (name: any) => {
