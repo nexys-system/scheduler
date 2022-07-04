@@ -6,11 +6,11 @@ Configure your CRON/schedulers in [Nexys](https://app.nexys.io) and run the cont
 
 ## API
 
-#### see
+#### see: `/see`
 
 See all crons. Allowed flag: `active=[false|true]`.Default is `true`
 
-#### start
+#### start: `/start`
 
 Start a cron
 
@@ -18,7 +18,7 @@ Required query params:
 
 - `name`: name/identifier of the cron job
 
-#### stop
+#### stop: `/stop`
 
 Stop a cron
 
@@ -26,10 +26,10 @@ Required query params:
 
 - `name`: name/identifier of the cron job
 
-#### startAll
+#### startAll: `/startAll`
 
 Starts all cron (that were not started yet)
 
-#### stopAll
+#### stopAll: `/stopAll`
 
 Stops all cron (that were not started yet)
