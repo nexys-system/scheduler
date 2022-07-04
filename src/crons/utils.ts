@@ -1,20 +1,28 @@
 import { appToken } from "../config";
 
-interface CronResponse {
-  body: string;
-  status: number;
-  dt: number;
-}
+import * as T from "./type";
 
 /**
  *
  * @returns gets all cron from nexys
  */
-export const getCronsFromHost = async () => {
+export const getCronsFromHost = async (): Promise<T.NexysCron[]> => {
   const everySec = "* * * * * *";
-  const c = { name: "my", cronstring: everySec };
+  const c: T.NexysCron = {
+    name: "my",
+    cronstring: everySec,
+    host: "https://service.nexys.ch",
+  };
 
   return Promise.resolve([c]);
+};
+
+const getPath = (name: string, path?: string): string => {
+  if (!path) {
+    return "/cron?name=" + name;
+  }
+
+  return path;
 };
 
 /**
@@ -22,11 +30,13 @@ export const getCronsFromHost = async () => {
  * @param name take
  * @returns
  */
-export const cronNameToFunction = async (
-  name: string
-): Promise<CronResponse> => {
-  //
-  const url = "https://service.nexys.io/cron?name=" + name;
+export const cronNameToFunction = async ({
+  name,
+  path: pathIn,
+  host,
+}: Omit<T.NexysCron, "cronstring">): Promise<T.CronResponse> => {
+  const path = getPath(name, pathIn);
+  const url = host + path;
   const headers = {
     "content-type": "application/json",
     Authorization: "bearer " + appToken,
@@ -55,7 +65,7 @@ export const cronNameToFunction = async (
  */
 const logResponse = (
   cronName: string,
-  { body, status, dt }: CronResponse
+  { body, status, dt }: T.CronResponse
 ): Promise<void> => {
   const date = new Date();
   console.log("logging", cronName, body, status, dt, date);

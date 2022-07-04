@@ -1,4 +1,5 @@
 import { CronJob } from "cron";
+import { NexysCron } from "./type";
 import { cronNameToFunction, getCronsFromHost } from "./utils";
 
 class Cron {
@@ -31,12 +32,11 @@ class Cron {
 
   init = async () => {
     // get all crons
-    const crons: { name: string; cronstring: string }[] =
-      await getCronsFromHost();
+    const crons: NexysCron[] = await getCronsFromHost();
 
-    crons.forEach((cron) => {
-      const fx = () => cronNameToFunction(cron.name);
-      const job = new CronJob(cron.cronstring, fx);
+    crons.forEach(({ cronstring, ...cron }) => {
+      const fx = () => cronNameToFunction(cron);
+      const job = new CronJob(cronstring, fx);
       job.start();
 
       this.cronJobs.set(cron.name, job);
@@ -46,6 +46,4 @@ class Cron {
   };
 }
 
-const cron = new Cron();
-
-export default cron;
+export default new Cron();
