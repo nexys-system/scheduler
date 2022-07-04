@@ -1,7 +1,7 @@
 import KoaRouter from "koa-router";
 
 import * as Meta from "./meta";
-import { getCron, getCrons } from "./crons";
+import Cron from "./crons";
 
 const router = new KoaRouter();
 
@@ -12,7 +12,7 @@ router.get("/see", async (ctx) => {
     typeof active === "string" && active.toLowerCase() === "false"
       ? false
       : true;
-  const crons = getCrons(running).map(([k]) => k);
+  const crons = Cron.getAll(running).map(([k]) => k);
 
   ctx.body = { crons, n: crons.length, active: running };
 });
@@ -21,7 +21,7 @@ router.get("/start", async (ctx) => {
   const { name } = ctx.query;
 
   try {
-    const cron = getCron(name);
+    const cron = Cron.get(name);
 
     if (cron.running === true) {
       ctx.status = 400;
@@ -43,7 +43,7 @@ router.get("/stop", async (ctx) => {
   const { name } = ctx.query;
 
   try {
-    const cron = getCron(name);
+    const cron = Cron.get(name);
 
     if (cron.running === false) {
       ctx.status = 400;
@@ -62,7 +62,7 @@ router.get("/stop", async (ctx) => {
 });
 
 router.get("/startAll", async (ctx) => {
-  const crons = getCrons(false).map(([k, v]) => {
+  const crons = Cron.getAll(false).map(([k, v]) => {
     console.log("starting " + k);
     v.start();
     return k;
@@ -76,7 +76,7 @@ router.get("/startAll", async (ctx) => {
 });
 
 router.get("/stopAll", async (ctx) => {
-  const crons = getCrons(true).map(([k, v]) => {
+  const crons = Cron.getAll(true).map(([k, v]) => {
     console.log("stopping " + k);
     v.stop();
     return k;
