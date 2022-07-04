@@ -6,7 +6,7 @@ on:
       - v*
 
 env:
-  DOCKERHUB_URL: ghcr.io/nexys-admin/finy-server/finy
+  DOCKERHUB_URL: ghcr.io/nexys-system/scheduler/scheduler
 
 jobs:
   test:
