@@ -5,8 +5,9 @@ export interface CronResponse {
 }
 
 export interface NexysCron {
+  uuid: string;
   host: string;
   path?: string;
-  cronstring: string;
+  cronString: string;
   name: string;
 }

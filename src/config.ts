@@ -9,4 +9,7 @@ if (typeof process.env.APP_TOKEN !== "string") {
 }
 
 export const appToken: string = process.env.APP_TOKEN;
-export const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+export const port: number = process.env.PORT ? Number(process.env.PORT) : 3000;
+
+export const nexysHost: string =
+  process.env.NEXYS_HOST || "https://service.nexys.io/";

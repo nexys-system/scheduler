@@ -1,6 +1,5 @@
 import { CronJob } from "cron";
-import { NexysCron } from "./type";
-import { cronNameToFunction, getCronsFromHost } from "./utils";
+import { cronNameToFunction, getCronsFromHost } from "./nexys-request";
 
 class Cron {
   // this Map will keep all crons in memory.
@@ -32,17 +31,21 @@ class Cron {
 
   init = async () => {
     // get all crons
-    const crons: NexysCron[] = await getCronsFromHost();
+    const crons = await getCronsFromHost();
 
-    crons.forEach(({ cronstring, ...cron }) => {
+    crons.forEach(({ cronString, ...cron }) => {
       const fx = () => cronNameToFunction(cron);
-      const job = new CronJob(cronstring, fx);
+      const job = new CronJob(cronString, fx);
       job.start();
+      console.log(`== CRON "${cron.name}" started`);
 
+      // const name = getCronName(cron);
       this.cronJobs.set(cron.name, job);
     });
 
-    console.log(`Crons started, n=${this.getAll().length}`);
+    console.log(
+      `End initialization: all crons started, n=${this.getAll().length}`
+    );
   };
 }
 
