@@ -4,6 +4,7 @@ import * as T from "./type";
 import * as U from "./utils";
 
 // here use 'app-token' and not authorization
+// todo: do not use apptoken directly wrap in a class/function
 const headers = { "app-token": appToken, "content-type": "application/json" };
 
 /**
