@@ -1,6 +1,6 @@
 {
   "name": "@nexys/scheduler",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "manages scheduled jobs/crons for nexys platform",
   "main": "dist/index.js",
   "author": "Nexys",
